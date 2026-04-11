@@ -1,7 +1,7 @@
 # ml_model.py - Machine Learning Component
 # Wine Quality Prediction using Random Forest Classifier
 
-# ── imports ──────────────────────────────────────────────────────────────────
+# imports
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -15,7 +15,7 @@ from sklearn.metrics import (
 from sklearn.preprocessing import LabelEncoder
 import joblib
 
-# ── 1. Load cleaned data (produced by Zara's eda.py) ─────────────────────────
+# 1. Load cleaned data
 print("=" * 55)
 print("  Wine Quality - Random Forest Classifier")
 print("=" * 55)
@@ -23,7 +23,7 @@ print("=" * 55)
 df = pd.read_csv("data/wine_cleaned.csv")
 print(f"\nDataset loaded: {df.shape[0]} rows, {df.shape[1]} columns")
 
-# ── 2. Feature engineering ────────────────────────────────────────────────────
+# 2. Feature engineering
 # Encode wine_type: red = 0, white = 1
 le = LabelEncoder()
 df["wine_type_encoded"] = le.fit_transform(df["wine_type"])
@@ -47,7 +47,7 @@ print(f"\nClass distribution:")
 print(f"  Good quality (1): {y.sum()} ({y.mean()*100:.1f}%)")
 print(f"  Not good     (0): {(y==0).sum()} ({(y==0).mean()*100:.1f}%)")
 
-# ── 3. Train / test split (80 / 20) ──────────────────────────────────────────
+# 3. Train / test split (80 / 20)
 X_train, X_test, y_train, y_test = train_test_split(
     X, y, test_size=0.2, random_state=42, stratify=y
 )
@@ -55,7 +55,7 @@ X_train, X_test, y_train, y_test = train_test_split(
 print(f"\nTrain set : {len(X_train)} rows")
 print(f"Test  set : {len(X_test)} rows")
 
-# ── 4. Train Random Forest ────────────────────────────────────────────────────
+# 4. Train Random Forest
 print("\nTraining Random Forest Classifier ...")
 
 rf = RandomForestClassifier(
@@ -67,7 +67,7 @@ rf = RandomForestClassifier(
 rf.fit(X_train, y_train)
 print("Training complete.")
 
-# ── 5. Evaluate ───────────────────────────────────────────────────────────────
+# 5. Evaluate
 y_pred = rf.predict(X_test)
 
 accuracy = accuracy_score(y_test, y_pred)
@@ -81,14 +81,14 @@ print(f"  F1 Score : {f1:.4f}")
 print("\nDetailed Classification Report:")
 print(classification_report(y_test, y_pred, target_names=["Not Good", "Good"]))
 
-# ── 6. Feature importance ─────────────────────────────────────────────────────
+# 6. Feature importance
 importances = pd.Series(rf.feature_importances_, index=FEATURE_COLS)
 importances = importances.sort_values(ascending=False)
 
 print("Feature Importances (top 5):")
 print(importances.head(5).round(4).to_string())
 
-# ── 7. Save figures ───────────────────────────────────────────────────────────
+# 7. Save figures
 plt.style.use("seaborn-v0_8-whitegrid")
 
 # Fig 7 - Confusion Matrix
@@ -113,7 +113,7 @@ plt.savefig("fig8_feature_importance.png", dpi=150)
 plt.show()
 print("Saved: fig8_feature_importance.png")
 
-# ── 8. Save trained model ─────────────────────────────────────────────────────
+# 8. Save trained model
 joblib.dump(rf, "data/rf_model.pkl")
 joblib.dump(le, "data/label_encoder.pkl")
 print("\nModel saved to: data/rf_model.pkl")

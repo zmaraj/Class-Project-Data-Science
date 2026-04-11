@@ -15,7 +15,8 @@ from sklearn.preprocessing import LabelEncoder
 st.set_page_config(
     page_title="Wine Quality Analysis",
     page_icon="🍷",
-    layout="wide"
+    layout="wide",
+    initial_sidebar_state="expanded"
 )
 
 st.markdown("""
@@ -25,6 +26,10 @@ st.markdown("""
 .stApp { background-color: #ffffff; }
 
 header[data-testid="stHeader"] { background-color: #ffffff !important; }
+[data-testid="stSidebarCollapseButton"] { display: none !important; }
+[data-testid="collapsedControl"] { display: none !important; }
+[data-testid="stSidebarCollapsedControl"] { display: none !important; }
+button[data-testid="baseButton-headerNoPadding"] { display: none !important; }
 
 /* All text default */
 body, p, li, span, div {
@@ -175,7 +180,7 @@ hr { border-color: #e8ddd8 !important; }
 </style>
 """, unsafe_allow_html=True)
 
-# ── constants ─────────────────────────────────────────────────────────────────
+# constants
 RED     = "#c0392b"
 BLUE    = "#2980b9"
 WINE    = "#6B0F1A"
@@ -188,7 +193,7 @@ FEATURE_COLS = [
     "alcohol", "wine_type_encoded"
 ]
 
-# ── data + model ──────────────────────────────────────────────────────────────
+# data + model
 @st.cache_data
 def load_data():
     df = pd.read_csv("data/wine_cleaned.csv")
@@ -214,7 +219,7 @@ df, le = load_data()
 rf, X_test, y_test = train_model(df)
 y_pred = rf.predict(X_test)
 
-# ── sidebar ───────────────────────────────────────────────────────────────────
+# sidebar
 with st.sidebar:
     st.markdown("""
     <div style='text-align:center; padding:2rem 0 1.2rem 0; border-bottom:1px solid #e8ddd8; margin-bottom:1.8rem;'>
@@ -252,7 +257,7 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-# ── chart helpers ─────────────────────────────────────────────────────────────
+# chart helpers
 def light_fig(w=11, h=4.5):
     fig, ax = plt.subplots(figsize=(w, h))
     fig.patch.set_facecolor("#ffffff")
@@ -392,7 +397,7 @@ elif page == "Exploratory Analysis":
         st.info("⚗️ White wines have significantly higher total sulfur dioxide.")
     with col2:
         st.info("🍶 **Volatile acidity** has the strongest negative correlation.")
-        st.info("⚠️ Only ~22% of wines score ≥ 7 — the dataset is class-imbalanced.")
+        st.info("⚠️ Only ~22% of wines score ≥ 7 so the dataset is class-imbalanced.")
 
 
 # ═══════════════════════════════════════════════════════════════════════════════
